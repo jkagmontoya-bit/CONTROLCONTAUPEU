@@ -1,7 +1,6 @@
 import ActivityRow from './ActivityRow';
+import { SEDES } from '../../data/activitiesData';
 import './ActivityTable.css';
-
-const SEDES = ['LIMA', 'PU', 'IU', 'CU', 'JULIACA', 'TARAPOTO', 'CAT', 'ISTAT', 'CUT'];
 
 const AREA_COLORS = {
   ventas: '#4f8cff',

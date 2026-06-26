@@ -4,15 +4,15 @@
  */
 
 export const SEDES = [
-  'LIMA',
-  'PU',
-  'IU',
-  'CU',
-  'JULIACA',
-  'TARAPOTO',
+  'SEDE LIMA',
+  'UNION',
+  'IMPRENTA',
+  'COLEGIO UNION LIMA',
+  'SEDE-JULIACA',
+  'SEDE-TARAPOTO',
   'CAT',
   'ISTAT',
-  'CUT',
+  'COLEGIO UNION TARAPOTO',
 ];
 
 export const AREAS = {

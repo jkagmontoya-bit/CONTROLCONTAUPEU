@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import ProgressRing from './ProgressRing';
+import { SEDES } from '../../data/activitiesData';
 import './AreaCard.css';
 
 const AREA_META = {
@@ -7,8 +8,6 @@ const AREA_META = {
   compras: { label: 'Compras', icon: '🛒', color: '#7c5cff' },
   conciliaciones: { label: 'Conciliaciones', icon: '🔄', color: '#00d4ff' },
 };
-
-const SEDES = ['LIMA', 'PU', 'IU', 'CU', 'JULIACA', 'TARAPOTO', 'CAT', 'ISTAT', 'CUT'];
 
 function getStatusColor(percentage, deadline) {
   if (percentage < 100) return AREA_META[Object.keys(AREA_META)[0]]?.color || '#4f8cff';

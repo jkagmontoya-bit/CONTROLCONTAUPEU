@@ -1,21 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { SEDES } from '../../data/activitiesData';
 import './RegisterSede.css';
-
-/**
- * List of all sedes available for registration.
- */
-const SEDES = [
-  'Lima',
-  'Juliaca',
-  'Tarapoto',
-  'Moyobamba',
-  'Cusco',
-  'Arequipa',
-  'Trujillo',
-  'Huancayo',
-  'Iquitos',
-];
 
 const AREAS = [
   'Ventas',
@@ -24,11 +10,11 @@ const AREAS = [
 ];
 
 /**
- * RegisterSede — Registration screen for new users to select their sede and area.
+ * RegisterSede — Registration screen for new users to select their sedes and area.
  */
 export default function RegisterSede() {
   const { user, registerSede } = useContext(AuthContext);
-  const [selectedSede, setSelectedSede] = useState(null);
+  const [selectedSedes, setSelectedSedes] = useState([]);
   const [selectedArea, setSelectedArea] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,14 +22,22 @@ export default function RegisterSede() {
   const displayName = user?.displayName || 'Usuario';
   const email = user?.email || '';
 
+  const handleToggleSede = (sede) => {
+    setSelectedSedes((prev) =>
+      prev.includes(sede)
+        ? prev.filter((s) => s !== sede)
+        : [...prev, sede]
+    );
+  };
+
   const handleConfirm = async () => {
-    if (!selectedSede || !selectedArea) return;
+    if (selectedSedes.length === 0 || !selectedArea) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      await registerSede(selectedSede, selectedArea);
+      await registerSede(selectedSedes, selectedArea);
     } catch (err) {
       console.error('Registration failed:', err);
       setError(err?.message || 'Error al registrar. Intenta nuevamente.');
@@ -83,17 +77,17 @@ export default function RegisterSede() {
           ))}
         </div>
 
-        {/* Sede Selection */}
-        <label className="register-label" style={{ marginTop: 'var(--space-lg)' }}>Selecciona tu sede:</label>
+        {/* Sede Selection (Multiple) */}
+        <label className="register-label" style={{ marginTop: 'var(--space-lg)' }}>Selecciona tus sedes:</label>
         <div className="register-grid">
           {SEDES.map((sede) => (
             <button
               key={sede}
               type="button"
               className={`register-sede-btn${
-                selectedSede === sede ? ' register-sede-btn--selected' : ''
+                selectedSedes.includes(sede) ? ' register-sede-btn--selected' : ''
               }`}
-              onClick={() => setSelectedSede(sede)}
+              onClick={() => handleToggleSede(sede)}
             >
               {sede}
             </button>
@@ -104,7 +98,7 @@ export default function RegisterSede() {
         <button
           className="register-btn-confirm"
           onClick={handleConfirm}
-          disabled={!selectedSede || !selectedArea || loading}
+          disabled={selectedSedes.length === 0 || !selectedArea || loading}
           type="button"
         >
           {loading && <span className="register-spinner" aria-label="Cargando" />}

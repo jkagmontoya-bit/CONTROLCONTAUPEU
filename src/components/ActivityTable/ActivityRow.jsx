@@ -1,7 +1,6 @@
+import { SEDES } from '../../data/activitiesData';
 import SedeCell from './SedeCell';
 import ProgressBar from '../common/ProgressBar';
-
-const SEDES = ['LIMA', 'PU', 'IU', 'CU', 'JULIACA', 'TARAPOTO', 'CAT', 'ISTAT', 'CUT'];
 
 const AREA_COLORS = {
   ventas: '#4f8cff',
@@ -31,11 +30,11 @@ export default function ActivityRow({
   /* Deadline helpers */
   const isOverdue = deadline && new Date(deadline) < new Date();
 
-  const userSede = userProfile?.sede;
   const canEditSede = (sede) => {
     if (isAdmin) return true;
-    if (!userSede) return false;
-    return userSede.toUpperCase() === sede.toUpperCase();
+    const isSameArea = userProfile?.area === areaKey || !userProfile?.area;
+    const hasSede = Array.isArray(userProfile?.sedes) && userProfile.sedes.includes(sede);
+    return isSameArea && hasSede;
   };
 
   const handleDeadlineChange = (e) => {

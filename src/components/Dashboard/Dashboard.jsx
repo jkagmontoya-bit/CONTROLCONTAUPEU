@@ -1,10 +1,9 @@
 import { useState, useMemo } from 'react';
+import { SEDES } from '../../data/activitiesData';
 import AreaCard from './AreaCard';
 import OverallProgress from './OverallProgress';
 import ActivityTable from '../ActivityTable/ActivityTable';
 import './Dashboard.css';
-
-const SEDES = ['LIMA', 'PU', 'IU', 'CU', 'JULIACA', 'TARAPOTO', 'CAT', 'ISTAT', 'CUT'];
 const AREA_KEYS = ['ventas', 'compras', 'conciliaciones'];
 
 function calcAreaPct(areaData, activitiesStatus, areaKey) {
