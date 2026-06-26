@@ -5,6 +5,7 @@ import OverallProgress from './OverallProgress';
 import ActivityTable from '../ActivityTable/ActivityTable';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../common/Toast';
 import './Dashboard.css';
 
 function calcAreaPct(areaActivities, activitiesDataArea, areaKey) {
@@ -62,9 +63,17 @@ export default function Dashboard() {
     toggleSede(selectedPeriod, areaKey, actId, sede);
   };
 
-  const handleSetDeadline = (areaKey, actId, deadlineStr) => {
-    const dateObj = new Date(`${deadlineStr}T12:00:00`); 
-    setDeadline(selectedPeriod, areaKey, actId, dateObj);
+  const { showToast } = useToast();
+
+  const handleSetDeadline = async (areaKey, actId, deadlineStr) => {
+    if (!deadlineStr) return; // Ignore clears for now
+    try {
+      const dateObj = new Date(`${deadlineStr}T12:00:00`); 
+      await setDeadline(selectedPeriod, areaKey, actId, dateObj);
+      showToast('Fecha límite guardada', 'success');
+    } catch (err) {
+      showToast('Error al guardar fecha', 'error');
+    }
   };
 
   const handleUploadEvidence = (areaKey, actId, sede, file) => {
