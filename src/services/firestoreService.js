@@ -40,7 +40,8 @@ export async function createUserProfile(uid, data) {
   await setDoc(docRef, {
     email: data.email,
     displayName: data.displayName,
-    sede: data.sede,
+    sedes: data.sedes || [],
+    area: data.area || null,
     role: data.role,
     createdAt: serverTimestamp(),
   });
