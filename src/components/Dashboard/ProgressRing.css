@@ -1,0 +1,63 @@
+/* ===== ProgressRing.css ===== */
+
+.progress-ring-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring-svg {
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.3));
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.progress-ring-fg {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.progress-ring-fg.complete {
+  animation: ringPulseGlow 2s ease-in-out infinite;
+}
+
+.progress-ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  pointer-events: none;
+}
+
+.progress-ring-value {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.progress-ring-percent {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1;
+}
+
+/* Glow filter defined in SVG defs */
+
+@keyframes ringPulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px var(--ring-color, #00e676));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px var(--ring-color, #00e676));
+  }
+}

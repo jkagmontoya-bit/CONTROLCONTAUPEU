@@ -1,0 +1,250 @@
+/* ============================================
+   RegisterSede — Styles
+   ============================================ */
+
+/* --- Background Container --- */
+.register-screen {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-lg);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, #0d0d2b 100%);
+}
+
+/* --- Animated Shapes --- */
+.register-screen::before,
+.register-screen::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.register-screen::before {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(124, 92, 255, 0.3), transparent 70%);
+  top: -80px;
+  right: -80px;
+  animation: regFloat1 20s ease-in-out infinite;
+}
+
+.register-screen::after {
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.25), transparent 70%);
+  bottom: -60px;
+  left: -60px;
+  animation: regFloat2 24s ease-in-out infinite;
+}
+
+@keyframes regFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-60px, 80px) scale(1.1); }
+}
+
+@keyframes regFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -70px) scale(1.08); }
+}
+
+/* --- Card --- */
+.register-card {
+  position: relative;
+  z-index: var(--z-base);
+  width: 100%;
+  max-width: 560px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: var(--space-2xl) var(--space-xl);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- Welcome Section --- */
+.register-welcome {
+  margin-bottom: var(--space-xs);
+}
+
+.register-welcome__icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: var(--space-sm);
+  display: inline-block;
+}
+
+.register-welcome__greeting {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.register-welcome__email {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+/* --- Sede Selection --- */
+.register-label {
+  display: block;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* --- Sede Grid --- */
+.register-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.register-sede-btn {
+  position: relative;
+  padding: var(--space-md) var(--space-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.register-sede-btn:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-hover);
+  color: var(--color-text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(124, 92, 255, 0.1);
+}
+
+.register-sede-btn--selected {
+  background: rgba(124, 92, 255, 0.15);
+  border-color: var(--color-compras);
+  color: var(--color-text-primary);
+  box-shadow: 0 0 20px rgba(124, 92, 255, 0.2), inset 0 0 20px rgba(124, 92, 255, 0.05);
+}
+
+.register-sede-btn--selected::after {
+  content: '✓';
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: var(--font-size-xs);
+  color: var(--color-compras);
+  font-weight: 700;
+}
+
+/* --- Confirm Button --- */
+.register-btn-confirm {
+  width: 100%;
+  padding: 14px var(--space-lg);
+  background: linear-gradient(135deg, var(--color-compras), var(--color-ventas));
+  color: #ffffff;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(124, 92, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.register-btn-confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(124, 92, 255, 0.4);
+}
+
+.register-btn-confirm:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.register-btn-confirm:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- Loading Spinner --- */
+.register-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: var(--space-sm);
+}
+
+/* --- Note --- */
+.register-note {
+  margin-top: var(--space-lg);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+/* --- Error Message --- */
+.register-error {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 23, 68, 0.1);
+  border: 1px solid rgba(255, 23, 68, 0.3);
+  border-radius: var(--radius-xs);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .register-card {
+    padding: var(--space-xl) var(--space-md);
+    max-width: 100%;
+  }
+
+  .register-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .register-welcome__greeting {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 380px) {
+  .register-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .register-sede-btn {
+    font-size: var(--font-size-xs);
+    padding: var(--space-sm) var(--space-xs);
+  }
+}

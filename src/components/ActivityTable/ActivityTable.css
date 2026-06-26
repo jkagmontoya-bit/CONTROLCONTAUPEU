@@ -1,0 +1,187 @@
+/* ===== ActivityTable.css ===== */
+
+.activity-table-container {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  margin-top: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  animation: tableSlideDown 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.activity-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.activity-table-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.activity-table-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.activity-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px;
+}
+
+/* ── Header ── */
+.activity-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 14px 10px;
+  text-align: center;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.activity-table thead th:first-child {
+  text-align: center;
+  width: 40px;
+}
+
+.activity-table thead th:nth-child(2) {
+  text-align: left;
+  min-width: 200px;
+}
+
+.activity-table thead th:nth-child(3) {
+  min-width: 130px;
+}
+
+/* ── Rows ── */
+.activity-table tbody tr {
+  transition: background 0.25s ease;
+}
+
+.activity-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.activity-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.activity-table tbody tr:nth-child(even):hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Cells ── */
+.activity-table td {
+  padding: 12px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.activity-table td:first-child {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  width: 40px;
+}
+
+.activity-table td:nth-child(2) {
+  text-align: left;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* ── Deadline column ── */
+.activity-row-deadline-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #ffffff;
+  outline: none;
+  transition: all 0.3s ease;
+  width: 120px;
+}
+
+.activity-row-deadline-input:focus {
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.12);
+}
+
+.activity-row-deadline-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(0.7);
+  cursor: pointer;
+}
+
+.activity-row-deadline-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.activity-row-deadline-text.on-time {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.activity-row-deadline-text.overdue {
+  color: #ff1744;
+  background: rgba(255, 23, 68, 0.1);
+}
+
+.activity-row-deadline-text.no-deadline {
+  color: rgba(255, 255, 255, 0.25);
+  font-style: italic;
+}
+
+/* ── Progress mini bar in last column ── */
+.activity-row-progress-cell {
+  min-width: 90px;
+}
+
+.activity-row-progress-info {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 4px;
+}
+
+@keyframes tableSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .activity-table-container {
+    border-radius: 14px;
+    margin-top: 14px;
+  }
+}

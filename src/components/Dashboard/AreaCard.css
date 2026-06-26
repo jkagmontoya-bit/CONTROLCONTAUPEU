@@ -1,0 +1,128 @@
+/* ===== AreaCard.css ===== */
+
+.area-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 28px 26px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.area-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 20px 20px 0 0;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.area-card:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.area-card:hover::before {
+  opacity: 1;
+}
+
+.area-card.expanded {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.area-card.complete {
+  animation: areaCompleteGlow 2.5s ease-in-out infinite;
+}
+
+.area-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.area-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.area-card-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.area-card-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+
+.area-card-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  font-weight: 400;
+}
+
+.area-card-chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+.area-card:hover .area-card-chevron {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.area-card.expanded .area-card-chevron {
+  transform: rotate(180deg);
+}
+
+.area-card-ring {
+  flex-shrink: 0;
+}
+
+@keyframes areaCompleteGlow {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 0 var(--area-glow-color, rgba(0, 230, 118, 0));
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 30px 2px var(--area-glow-color, rgba(0, 230, 118, 0.25));
+  }
+}
+
+@media (max-width: 600px) {
+  .area-card {
+    padding: 22px 20px;
+  }
+
+  .area-card-name {
+    font-size: 16px;
+  }
+}
