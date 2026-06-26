@@ -108,6 +108,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('./assets/logo1.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+  opacity: 0.03; /* Very subtle watermark */
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* --- Typography Scale --- */
