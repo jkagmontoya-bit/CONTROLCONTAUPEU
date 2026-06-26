@@ -92,6 +92,7 @@ export default function ActivityRow({
               completedAt={status.completedAt}
               completedBy={status.completedBy}
               evidenceUrl={status.evidenceUrl}
+              deadline={deadline}
               canEdit={canEditSede(sede)}
               sede={sede}
               activityName={activity.name || activity.nombre || ''}

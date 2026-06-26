@@ -45,16 +45,31 @@
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-/* ── Complete ── */
-.sede-cell.completed {
+/* ── Complete Statuses ── */
+.sede-cell.completed-green {
   background: rgba(0, 230, 118, 0.12);
   border: 1px solid rgba(0, 230, 118, 0.3);
+  color: var(--color-success);
 }
 
-.sede-cell-check {
-  font-size: 18px;
+.sede-cell.completed-yellow {
+  background: rgba(255, 214, 0, 0.12);
+  border: 1px solid rgba(255, 214, 0, 0.3);
+  color: #ffd600;
+}
+
+.sede-cell.completed-red {
+  background: rgba(255, 23, 68, 0.12);
+  border: 1px solid rgba(255, 23, 68, 0.3);
+  color: var(--color-danger);
+}
+
+.sede-cell-date {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
   animation: sedeCellPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  line-height: 1;
 }
 
 /* ── Upload button ── */

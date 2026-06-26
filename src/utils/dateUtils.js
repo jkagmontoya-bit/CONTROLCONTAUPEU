@@ -67,6 +67,35 @@ export function getCompletionStatus(deadline, lastCompletionDate, allCompleted =
 }
 
 /**
+ * Determine the completion color for a single Sede based on its completion date vs deadline.
+ * - GREEN: Completed on or before deadline
+ * - YELLOW: Completed within 3 days after deadline
+ * - RED: Completed more than 3 days after deadline
+ * 
+ * @param {Date|Timestamp|null} deadline 
+ * @param {Date|Timestamp|null} completedAt 
+ * @returns {'green'|'yellow'|'red'|null}
+ */
+export function getSedeCompletionColor(deadline, completedAt) {
+  if (!deadline || !completedAt) return null;
+
+  const deadlineDate = toDate(deadline);
+  const completionDate = toDate(completedAt);
+
+  if (!deadlineDate || !completionDate) return null;
+
+  const deadlineDay = new Date(deadlineDate.getFullYear(), deadlineDate.getMonth(), deadlineDate.getDate(), 23, 59, 59, 999);
+  const completionDay = new Date(completionDate.getFullYear(), completionDate.getMonth(), completionDate.getDate());
+
+  if (completionDay <= deadlineDay) return 'green';
+  
+  const gracePeriodEnd = new Date(deadlineDay.getTime() + THREE_DAYS_MS);
+  if (completionDay <= gracePeriodEnd) return 'yellow';
+
+  return 'red';
+}
+
+/**
  * Format a date as dd/mm/yyyy.
  * @param {Date|Timestamp|string|null} date
  * @returns {string} Formatted date or empty string
