@@ -283,7 +283,11 @@ export function subscribeToActivities(period, areaId, callback) {
     const unsubActivity = onSnapshot(activityDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        activitiesState[activity.id].deadline = data.deadline ?? null;
+        let deadlineIso = null;
+        if (data.deadline) {
+          deadlineIso = data.deadline.toDate ? data.deadline.toDate().toISOString() : new Date(data.deadline).toISOString();
+        }
+        activitiesState[activity.id].deadline = deadlineIso;
       }
       emitState();
     });
@@ -301,7 +305,11 @@ export function subscribeToActivities(period, areaId, callback) {
     const unsubSedes = onSnapshot(sedesCollRef, (snapshot) => {
       const sedesData = {};
       snapshot.forEach((sedeDoc) => {
-        sedesData[sedeDoc.id] = sedeDoc.data();
+        const sData = sedeDoc.data();
+        if (sData.completedAt && sData.completedAt.toDate) {
+          sData.completedAt = sData.completedAt.toDate().toISOString();
+        }
+        sedesData[sedeDoc.id] = sData;
       });
       activitiesState[activity.id].sedes = sedesData;
       emitState();

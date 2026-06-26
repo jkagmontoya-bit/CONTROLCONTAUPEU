@@ -68,9 +68,8 @@ export default function Dashboard() {
   };
 
   const handleUploadEvidence = (areaKey, actId, sede, file) => {
-    uploadEvidenceFile(file, selectedPeriod, areaKey, actId, sede).then(() => {
-      toggleSede(selectedPeriod, areaKey, actId, sede, file);
-    });
+    // toggleSede will upload the file and mark as completed
+    toggleSede(selectedPeriod, areaKey, actId, sede, file);
   };
 
   const gridItems = [];
