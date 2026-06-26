@@ -22,11 +22,9 @@ function calcAreaPct(areaActivities, activitiesDataArea, areaKey) {
 }
 
 export default function Dashboard() {
-  const { userProfile } = useAuth();
+  const { userProfile, isAdmin } = useAuth();
   const { activitiesData, selectedPeriod, toggleSede, setDeadline, uploadEvidenceFile } = useData();
   const [expandedArea, setExpandedArea] = useState(null);
-
-  const isAdmin = userProfile?.role === 'admin' || userProfile?.role === 'contador_general';
 
   const handleToggle = (areaKey) => {
     setExpandedArea((prev) => (prev === areaKey ? null : areaKey));
