@@ -68,7 +68,7 @@ export default function ActivityRow({
           <input
             type="date"
             className="activity-row-deadline-input"
-            value={deadline || ''}
+            value={deadline ? deadline.slice(0, 10) : ''}
             onChange={handleDeadlineChange}
           />
         ) : deadline ? (
