@@ -46,7 +46,7 @@ export default function ActivityRow({
     try {
       return new Date(dl).toLocaleDateString('es-PE', {
         day: '2-digit',
-        month: 'short',
+        month: '2-digit',
         year: 'numeric',
       });
     } catch {
