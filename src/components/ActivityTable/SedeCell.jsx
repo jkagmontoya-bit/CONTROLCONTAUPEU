@@ -75,6 +75,7 @@ export default function SedeCell({
     completed ? 'completed' : 'incomplete',
     colorClass,
     canEdit && 'editable',
+    canEdit && !completed && 'pending-action',
     !canEdit && !completed && 'disabled',
   ].filter(Boolean).join(' ');
 

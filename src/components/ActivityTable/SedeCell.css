@@ -45,6 +45,24 @@
   border-color: rgba(255, 255, 255, 0.4);
 }
 
+/* ── Pending Action (Blinking) ── */
+.sede-cell.pending-action .sede-cell-checkbox {
+  animation: pendingBlink 1.5s infinite;
+}
+
+@keyframes pendingBlink {
+  0%, 100% {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: transparent;
+    box-shadow: none;
+  }
+  50% {
+    border-color: var(--color-ventas);
+    background: rgba(79, 140, 255, 0.2);
+    box-shadow: 0 0 10px rgba(79, 140, 255, 0.4);
+  }
+}
+
 /* ── Complete Statuses ── */
 .sede-cell.completed-green {
   background: rgba(0, 230, 118, 0.12);

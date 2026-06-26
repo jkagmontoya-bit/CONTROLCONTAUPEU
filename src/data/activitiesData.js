@@ -58,7 +58,7 @@ export const AREAS = {
 };
 
 /** Admin email — the Contador General who manages deadlines */
-export const ADMIN_EMAIL = 'contabilidad.universidades@upeu.edu.pe';
+export const ADMIN_EMAIL = 'analista.senior.1@upeu.edu.pe';
 
 /** Total number of sedes (used for progress calculations) */
 export const TOTAL_SEDES = SEDES.length; // 9
