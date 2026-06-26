@@ -218,20 +218,12 @@ export async function initializePeriod(period) {
           'sedes', sede
         );
 
-        // Only set defaults — merge to avoid overwriting existing data
-        batch.set(sedeDocRef, {
-          completed: false,
-          completedAt: null,
-          completedBy: null,
-          evidenceUrl: null,
-        }, { merge: true });
-        operationCount++;
-
-        // If batch is getting large, commit and start a new one
-        if (operationCount >= MAX_BATCH_SIZE) {
-          await batch.commit();
-          operationCount = 0;
-        }
+        // We only want to create the document if it doesn't exist to avoid overwriting progress
+        // But since we are in a batch, we can't easily read first. 
+        // We will just skip initializing sedes entirely since the UI handles missing docs fine, 
+        // or we could use updateDoc which fails if it doesn't exist, but that's complex.
+        // Actually, if we don't initialize the sedes documents, they will be created when the user toggles them!
+        // We can just remove the sede initialization from here.
       }
     }
   }

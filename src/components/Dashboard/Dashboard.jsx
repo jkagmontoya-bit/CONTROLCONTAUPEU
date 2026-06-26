@@ -76,9 +76,14 @@ export default function Dashboard() {
     }
   };
 
-  const handleUploadEvidence = (areaKey, actId, sede, file) => {
-    // toggleSede will upload the file and mark as completed
-    toggleSede(selectedPeriod, areaKey, actId, sede, file);
+  const handleUploadEvidence = async (areaKey, actId, sede, file) => {
+    try {
+      await toggleSede(selectedPeriod, areaKey, actId, sede, file);
+      showToast('Evidencia subida correctamente', 'success');
+    } catch (err) {
+      console.error(err);
+      showToast('Error al subir evidencia. Revisa los permisos de Firebase Storage.', 'error');
+    }
   };
 
   const gridItems = [];
