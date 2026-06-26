@@ -61,8 +61,12 @@ function PublicRoute({ children }) {
     );
   }
 
-  if (user && userProfile) {
-    return <Navigate to="/" replace />;
+  if (user) {
+    if (userProfile) {
+      return <Navigate to="/" replace />;
+    } else {
+      return <Navigate to="/register" replace />;
+    }
   }
 
   return children;

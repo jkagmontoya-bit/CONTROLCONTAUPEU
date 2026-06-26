@@ -17,12 +17,19 @@ const SEDES = [
   'Iquitos',
 ];
 
+const AREAS = [
+  'Ventas',
+  'Compras',
+  'Conciliaciones'
+];
+
 /**
- * RegisterSede — Registration screen for new users to select their sede.
+ * RegisterSede — Registration screen for new users to select their sede and area.
  */
 export default function RegisterSede() {
-  const { user, registerUserProfile } = useContext(AuthContext);
+  const { user, registerSede } = useContext(AuthContext);
   const [selectedSede, setSelectedSede] = useState(null);
+  const [selectedArea, setSelectedArea] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -30,13 +37,13 @@ export default function RegisterSede() {
   const email = user?.email || '';
 
   const handleConfirm = async () => {
-    if (!selectedSede) return;
+    if (!selectedSede || !selectedArea) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      await registerUserProfile({ sede: selectedSede });
+      await registerSede(selectedSede, selectedArea);
     } catch (err) {
       console.error('Registration failed:', err);
       setError(err?.message || 'Error al registrar. Intenta nuevamente.');
@@ -59,9 +66,25 @@ export default function RegisterSede() {
           <p className="register-welcome__email">{email}</p>
         </div>
 
-        {/* Sede Selection */}
-        <label className="register-label">Selecciona tu sede:</label>
+        {/* Area Selection */}
+        <label className="register-label">Selecciona tu área de responsabilidad:</label>
+        <div className="register-grid register-grid--areas">
+          {AREAS.map((area) => (
+            <button
+              key={area}
+              type="button"
+              className={`register-sede-btn${
+                selectedArea === area ? ' register-sede-btn--selected' : ''
+              }`}
+              onClick={() => setSelectedArea(area)}
+            >
+              {area}
+            </button>
+          ))}
+        </div>
 
+        {/* Sede Selection */}
+        <label className="register-label" style={{ marginTop: 'var(--space-lg)' }}>Selecciona tu sede:</label>
         <div className="register-grid">
           {SEDES.map((sede) => (
             <button
@@ -81,7 +104,7 @@ export default function RegisterSede() {
         <button
           className="register-btn-confirm"
           onClick={handleConfirm}
-          disabled={!selectedSede || loading}
+          disabled={!selectedSede || !selectedArea || loading}
           type="button"
         >
           {loading && <span className="register-spinner" aria-label="Cargando" />}
@@ -97,7 +120,7 @@ export default function RegisterSede() {
 
         {/* Note */}
         <p className="register-note">
-          El Contador General asignará tu acceso
+          El Contador General asignará tu acceso definitivo
         </p>
       </div>
     </div>

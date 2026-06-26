@@ -129,12 +129,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   /**
-   * Complete the registration process by selecting a sede.
+   * Complete the registration process by selecting a sede and area.
    * Creates the user profile in Firestore.
    *
-   * @param {string} sede - The selected sede, e.g. 'LIMA'
+   * @param {string} sede - The selected sede, e.g. 'Lima'
+   * @param {string} area - The selected area, e.g. 'Ventas'
    */
-  const registerSede = useCallback(async (sede) => {
+  const registerSede = useCallback(async (sede, area) => {
     if (!user) {
       setError('Debes iniciar sesión primero.');
       return;
@@ -151,6 +152,7 @@ export function AuthProvider({ children }) {
         email,
         displayName: user.displayName || email.split('@')[0],
         sede,
+        area,
         role,
       };
 
