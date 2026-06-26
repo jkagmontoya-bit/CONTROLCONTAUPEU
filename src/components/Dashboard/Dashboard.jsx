@@ -1,17 +1,18 @@
 import { useState, useMemo } from 'react';
-import { SEDES } from '../../data/activitiesData';
+import { SEDES, AREAS, AREA_IDS } from '../../data/activitiesData';
 import AreaCard from './AreaCard';
 import OverallProgress from './OverallProgress';
 import ActivityTable from '../ActivityTable/ActivityTable';
+import { useData } from '../../context/DataContext';
+import { useAuth } from '../../context/AuthContext';
 import './Dashboard.css';
-const AREA_KEYS = ['ventas', 'compras', 'conciliaciones'];
 
-function calcAreaPct(areaData, activitiesStatus, areaKey) {
+function calcAreaPct(areaActivities, activitiesDataArea, areaKey) {
   let comp = 0;
   let tot = 0;
-  (areaData || []).forEach((activity, idx) => {
-    const actId = activity.id || `${areaKey}-${idx}`;
-    const actStatus = activitiesStatus[actId] || {};
+  (areaActivities || []).forEach((activity) => {
+    const actId = activity.id;
+    const actStatus = activitiesDataArea?.[actId]?.sedes || {};
     SEDES.forEach((sede) => {
       tot++;
       if (actStatus[sede]?.completed) comp++;
@@ -20,40 +21,69 @@ function calcAreaPct(areaData, activitiesStatus, areaKey) {
   return tot === 0 ? 0 : Math.round((comp / tot) * 100);
 }
 
-export default function Dashboard({
-  activitiesData = {},
-  activitiesStatus = {},
-  deadlines = {},
-  userProfile = {},
-  isAdmin = false,
-  onToggleSede,
-  onSetDeadline,
-  onUploadEvidence,
-}) {
+export default function Dashboard() {
+  const { userProfile } = useAuth();
+  const { activitiesData, selectedPeriod, toggleSede, setDeadline, uploadEvidenceFile } = useData();
   const [expandedArea, setExpandedArea] = useState(null);
+
+  const isAdmin = userProfile?.role === 'admin' || userProfile?.role === 'contador_general';
 
   const handleToggle = (areaKey) => {
     setExpandedArea((prev) => (prev === areaKey ? null : areaKey));
   };
 
+  const getActivitiesStatus = (areaKey) => {
+    const areaStatus = activitiesData[areaKey] || {};
+    const statusMap = {};
+    Object.keys(areaStatus).forEach(actId => {
+      statusMap[actId] = areaStatus[actId].sedes || {};
+    });
+    return statusMap;
+  };
+
+  const getDeadlinesForArea = (areaKey) => {
+    const deadlines = {};
+    const areaStatus = activitiesData[areaKey] || {};
+    Object.keys(areaStatus).forEach(actId => {
+      if (areaStatus[actId]?.deadline) {
+        deadlines[actId] = areaStatus[actId].deadline;
+      }
+    });
+    return deadlines;
+  };
+
   const percentages = useMemo(() => {
     const pcts = {};
-    AREA_KEYS.forEach((key) => {
-      pcts[key] = calcAreaPct(activitiesData[key], activitiesStatus, key);
+    AREA_IDS.forEach((key) => {
+      pcts[key] = calcAreaPct(AREAS[key].activities, activitiesData[key], key);
     });
     return pcts;
-  }, [activitiesData, activitiesStatus]);
+  }, [activitiesData]);
 
-  /* Build grid items: cards + expanded table injected after the right card */
+  const handleToggleSede = (areaKey, actId, sede) => {
+    toggleSede(selectedPeriod, areaKey, actId, sede);
+  };
+
+  const handleSetDeadline = (areaKey, actId, deadlineStr) => {
+    const dateObj = new Date(`${deadlineStr}T12:00:00`); 
+    setDeadline(selectedPeriod, areaKey, actId, dateObj);
+  };
+
+  const handleUploadEvidence = (areaKey, actId, sede, file) => {
+    uploadEvidenceFile(file, selectedPeriod, areaKey, actId, sede).then(() => {
+      toggleSede(selectedPeriod, areaKey, actId, sede, file);
+    });
+  };
+
   const gridItems = [];
-  AREA_KEYS.forEach((key) => {
+  AREA_IDS.forEach((key) => {
     gridItems.push(
       <AreaCard
         key={key}
         areaKey={key}
-        areaData={activitiesData[key] || []}
-        activitiesStatus={activitiesStatus}
-        deadlines={deadlines}
+        areaData={AREAS[key].activities}
+        activitiesStatus={getActivitiesStatus(key)}
+        deadlines={getDeadlinesForArea(key)}
         isExpanded={expandedArea === key}
         onToggle={() => handleToggle(key)}
       />,
@@ -64,14 +94,14 @@ export default function Dashboard({
         <div className="dashboard-expanded-area" key={`table-${key}`}>
           <ActivityTable
             areaKey={key}
-            areaData={activitiesData[key] || []}
-            activitiesStatus={activitiesStatus}
-            deadlines={deadlines}
+            areaData={AREAS[key].activities}
+            activitiesStatus={getActivitiesStatus(key)}
+            deadlines={getDeadlinesForArea(key)}
             userProfile={userProfile}
             isAdmin={isAdmin}
-            onToggleSede={onToggleSede}
-            onSetDeadline={onSetDeadline}
-            onUploadEvidence={onUploadEvidence}
+            onToggleSede={(actId, sede) => handleToggleSede(key, actId, sede)}
+            onSetDeadline={(actId, deadline) => handleSetDeadline(key, actId, deadline)}
+            onUploadEvidence={(actId, sede, file) => handleUploadEvidence(key, actId, sede, file)}
           />
         </div>,
       );
