@@ -46,8 +46,9 @@
 }
 
 .header__brand-icon {
-  font-size: 1.5rem;
-  line-height: 1;
+  height: 32px;
+  width: auto;
+  object-fit: contain;
 }
 
 .header__brand-title {

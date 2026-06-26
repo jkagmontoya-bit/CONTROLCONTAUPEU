@@ -1,5 +1,6 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import logo from '../../assets/logo1.png';
 import './Header.css';
 
 /**
@@ -14,7 +15,7 @@ export default function Header({ periodSelector }) {
   const email = user?.email || '';
   const initial = displayName.charAt(0).toUpperCase();
   const isAdmin = userProfile?.role === 'admin' || userProfile?.role === 'contador_general';
-  const roleName = isAdmin ? 'Admin' : userProfile?.sede || 'Usuario';
+  const roleName = isAdmin ? 'Admin' : userProfile?.sedes?.join(', ') || 'Usuario';
 
   // Close mobile menu on outside click
   useEffect(() => {
@@ -44,9 +45,7 @@ export default function Header({ periodSelector }) {
     <header className="header">
       {/* Left: Brand */}
       <div className="header__brand">
-        <span className="header__brand-icon" role="img" aria-label="Logo">
-          📊
-        </span>
+        <img src={logo} alt="Logo" className="header__brand-icon" />
         <span className="header__brand-title">Control de Actividades</span>
       </div>
 

@@ -101,12 +101,13 @@
   margin-bottom: var(--space-lg);
 }
 
-.login-logo__icon {
-  font-size: 4rem;
-  line-height: 1;
+.login-logo__img {
+  width: 120px;
+  height: auto;
   margin-bottom: var(--space-md);
   display: inline-block;
   animation: loginIconBounce 3s ease-in-out infinite;
+  object-fit: contain;
 }
 
 @keyframes loginIconBounce {
@@ -274,8 +275,8 @@
     padding: var(--space-2xl) var(--space-lg);
   }
 
-  .login-logo__icon {
-    font-size: 3rem;
+  .login-logo__img {
+    width: 90px;
   }
 
   .login-logo__title {

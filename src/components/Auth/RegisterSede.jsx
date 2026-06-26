@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { SEDES } from '../../data/activitiesData';
+import logo from '../../assets/logo1.png';
 import './RegisterSede.css';
 
 const AREAS = [
@@ -51,9 +52,7 @@ export default function RegisterSede() {
       <div className="register-card">
         {/* Welcome */}
         <div className="register-welcome">
-          <div className="register-welcome__icon" role="img" aria-label="Bienvenido">
-            👋
-          </div>
+          <img src={logo} alt="Logo" className="register-welcome__img" />
           <h1 className="register-welcome__greeting">
             ¡Bienvenido, {displayName.split(' ')[0]}!
           </h1>

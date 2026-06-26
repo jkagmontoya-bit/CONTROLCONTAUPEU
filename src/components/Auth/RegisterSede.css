@@ -76,11 +76,12 @@
   margin-bottom: var(--space-xs);
 }
 
-.register-welcome__icon {
-  font-size: 2.5rem;
-  line-height: 1;
-  margin-bottom: var(--space-sm);
+.register-welcome__img {
+  width: 90px;
+  height: auto;
+  margin-bottom: var(--space-md);
   display: inline-block;
+  object-fit: contain;
 }
 
 .register-welcome__greeting {

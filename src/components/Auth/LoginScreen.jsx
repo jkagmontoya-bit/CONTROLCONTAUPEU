@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import logo from '../../assets/logo1.png';
 import './LoginScreen.css';
 
 /**
@@ -42,9 +43,7 @@ export default function LoginScreen() {
       <div className="login-card">
         {/* Logo area */}
         <div className="login-logo">
-          <div className="login-logo__icon" role="img" aria-label="Gráfico contable">
-            📊
-          </div>
+          <img src={logo} alt="Logo" className="login-logo__img" />
           <h1 className="login-logo__title">Control de Actividades</h1>
           <p className="login-logo__subtitle">Contabilidad General</p>
         </div>
