@@ -114,7 +114,7 @@ export function DataProvider({ children }) {
    * @param {string} sede - e.g. 'LIMA'
    * @param {File|null} [file=null] - Optional evidence file to upload
    */
-  const toggleSede = useCallback(async (period, areaId, activityId, sede, file = null) => {
+  const toggleSede = useCallback(async (period, areaId, activityId, sede, evidenceText = null) => {
     if (!user || !userProfile) {
       throw new Error('Debes iniciar sesión para realizar esta acción.');
     }
@@ -130,23 +130,15 @@ export function DataProvider({ children }) {
           completed: false,
           completedAt: null,
           completedBy: null,
-          evidenceUrl: null,
+          evidenceText: null,
         });
       } else {
         // Mark as completed
-        let evidenceUrl = null;
-
-        // Upload evidence if a file is provided
-        if (file) {
-          const result = await uploadEvidence(file, period, areaId, activityId, sede);
-          evidenceUrl = result.url;
-        }
-
         await updateSedeStatus(period, areaId, activityId, sede, {
           completed: true,
           completedAt: new Date(),
           completedBy: userProfile.email || user.email,
-          evidenceUrl,
+          evidenceText, // Save the text instead of file url
         });
       }
     } catch (err) {
