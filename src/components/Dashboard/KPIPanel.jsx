@@ -7,6 +7,7 @@ export default function KPIPanel({ activitiesData, percentages, onCerrarMes }) {
   const kpis = useMemo(() => {
     let totalCompleted = 0;
     let onTime = 0;
+    let delayed = 0;
     let late = 0;
     const sedeCounts = {};
     SEDES.forEach((s) => (sedeCounts[s] = 0));
@@ -29,6 +30,8 @@ export default function KPIPanel({ activitiesData, percentages, onCerrarMes }) {
             const delay = getDelayDays(deadline, completedAt);
             if (delay <= 0) {
               onTime++;
+            } else if (delay > 0 && delay <= 3) {
+              delayed++;
             } else {
               late++;
             }
@@ -43,7 +46,7 @@ export default function KPIPanel({ activitiesData, percentages, onCerrarMes }) {
       .sort((a, b) => b.count - a.count)
       .slice(0, 3); // Top 3
 
-    return { totalCompleted, totalPending, onTime, late, ranking, totalActivitiesCount };
+    return { totalCompleted, totalPending, onTime, delayed, late, ranking, totalActivitiesCount };
   }, [activitiesData]);
 
   const overallProgress = Math.round((percentages.ventas + percentages.compras + percentages.conciliaciones) / 3);
@@ -84,6 +87,10 @@ export default function KPIPanel({ activitiesData, percentages, onCerrarMes }) {
           <div className="kpi-punc-item">
             <span className="dot success" />
             <span>A Tiempo ({kpis.onTime})</span>
+          </div>
+          <div className="kpi-punc-item">
+            <span className="dot warning" />
+            <span>Tardes ({kpis.delayed})</span>
           </div>
           <div className="kpi-punc-item">
             <span className="dot danger" />

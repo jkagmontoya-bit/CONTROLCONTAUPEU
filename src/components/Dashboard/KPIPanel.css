@@ -85,6 +85,7 @@
   border-radius: 50%;
 }
 .kpi-punc-item .dot.success { background: #25D366; box-shadow: 0 0 8px #25D366; }
+.kpi-punc-item .dot.warning { background: #FFC107; box-shadow: 0 0 8px #FFC107; }
 .kpi-punc-item .dot.danger { background: #F44336; box-shadow: 0 0 8px #F44336; }
 
 .kpi-ranking {
