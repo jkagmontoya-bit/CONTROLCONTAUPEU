@@ -15,6 +15,8 @@ export default function ActivityTable({
   deadlines = {},
   userProfile = {},
   isAdmin = false,
+  selectedCells = [],
+  onSelectSede,
   onToggleSede,
   onSetDeadline,
   onUploadEvidence,
@@ -53,6 +55,8 @@ export default function ActivityTable({
                   deadline={deadlines[actId] || null}
                   userProfile={userProfile}
                   isAdmin={isAdmin}
+                  selectedCells={selectedCells}
+                  onSelectSede={onSelectSede}
                   onToggleSede={onToggleSede}
                   onSetDeadline={onSetDeadline}
                   onUploadEvidence={onUploadEvidence}

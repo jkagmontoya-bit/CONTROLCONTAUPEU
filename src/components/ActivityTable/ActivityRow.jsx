@@ -16,6 +16,8 @@ export default function ActivityRow({
   deadline = null,
   userProfile = {},
   isAdmin = false,
+  selectedCells = [],
+  onSelectSede,
   onToggleSede,
   onSetDeadline,
   onUploadEvidence,
@@ -85,6 +87,9 @@ export default function ActivityRow({
       {/* 9 Sede cells */}
       {SEDES.map((sede) => {
         const status = sedesStatus[sede] || {};
+        const isSelected = selectedCells.some(
+          (c) => c.areaKey === areaKey && c.actId === actId && c.sede === sede
+        );
         return (
           <td key={sede}>
             <SedeCell
@@ -94,10 +99,11 @@ export default function ActivityRow({
               evidenceUrl={status.evidenceUrl}
               deadline={deadline}
               canEdit={canEditSede(sede)}
+              isSelected={isSelected}
               sede={sede}
               activityName={activity.name || activity.nombre || ''}
               onToggle={() => onToggleSede?.(actId, sede)}
-              onUploadEvidence={(file) => onUploadEvidence?.(actId, sede, file)}
+              onSelect={() => onSelectSede?.(areaKey, actId, sede, deadline)}
             />
           </td>
         );

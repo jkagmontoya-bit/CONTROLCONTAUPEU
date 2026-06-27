@@ -32,6 +32,10 @@ export default function Dashboard() {
   const [expandedArea, setExpandedArea] = useState(null);
   const [modalData, setModalData] = useState({ isOpen: false, type: '', title: '', message: '' });
   const [showClosingSummary, setShowClosingSummary] = useState(false);
+  const [selectedCells, setSelectedCells] = useState([]);
+  const [showBulkPrompt, setShowBulkPrompt] = useState(false);
+  const [bulkEmail, setBulkEmail] = useState('');
+  const [isBulkApproving, setIsBulkApproving] = useState(false);
 
   const handleToggle = (areaKey) => {
     setExpandedArea((prev) => (prev === areaKey ? null : areaKey));
@@ -66,14 +70,25 @@ export default function Dashboard() {
   }, [activitiesData]);
 
   const handleToggleSede = (areaKey, actId, sede) => {
-    // Only used for unchecking if no file provided (if needed)
+    // Only used for unchecking
     toggleSede(selectedPeriod, areaKey, actId, sede);
+  };
+
+  const handleSelectSede = (areaKey, actId, sede, deadline) => {
+    setSelectedCells(prev => {
+      const exists = prev.find(c => c.areaKey === areaKey && c.actId === actId && c.sede === sede);
+      if (exists) {
+        return prev.filter(c => !(c.areaKey === areaKey && c.actId === actId && c.sede === sede));
+      } else {
+        return [...prev, { areaKey, actId, sede, deadline }];
+      }
+    });
   };
 
   const { showToast } = useToast();
 
   const handleSetDeadline = async (areaKey, actId, deadlineStr) => {
-    if (!deadlineStr) return; // Ignore clears for now
+    if (!deadlineStr) return; 
     try {
       const dateObj = new Date(`${deadlineStr}T12:00:00`); 
       await setDeadline(selectedPeriod, areaKey, actId, dateObj);
@@ -83,32 +98,48 @@ export default function Dashboard() {
     }
   };
 
-  const handleUploadEvidence = async (areaKey, actId, sede, file) => {
-    try {
-      await toggleSede(selectedPeriod, areaKey, actId, sede, file);
-      
-      const deadline = activitiesData[areaKey]?.[actId]?.deadline;
-      const completedAt = new Date();
-      const delay = getDelayDays(deadline, completedAt);
+  const handleBulkApprove = async () => {
+    if (!bulkEmail.trim() || selectedCells.length === 0) return;
+    setIsBulkApproving(true);
+    
+    let maxDelay = -Infinity;
 
+    try {
+      // Execute all toggles concurrently
+      await Promise.all(
+        selectedCells.map(cell => {
+          const completedAt = new Date();
+          const delay = getDelayDays(cell.deadline, completedAt);
+          if (delay > maxDelay) maxDelay = delay;
+          return toggleSede(selectedPeriod, cell.areaKey, cell.actId, cell.sede, bulkEmail.trim());
+        })
+      );
+
+      // Determine message based on max delay among approved cells
       let msgType = 'success';
-      let title = '¡Meta Lograda!';
-      let text = '¡Excelente trabajo! Has validado la actividad a tiempo. Sigue así.';
+      let title = '¡Aprobación Exitosa!';
+      let text = `¡Excelente trabajo! Has validado ${selectedCells.length} actividades exitosamente.`;
       
-      if (delay > 0 && delay <= 3) {
+      if (maxDelay > 0 && maxDelay <= 3) {
         msgType = 'warning';
-        title = 'Actividad Validada';
-        text = 'La actividad se validó con un ligero retraso. ¡Anímate a lograr la meta a tiempo el próximo mes!';
-      } else if (delay >= 4) {
+        text = `Validaste ${selectedCells.length} actividades (algunas con ligero retraso). ¡Anímate a lograr la meta a tiempo!`;
+      } else if (maxDelay >= 4) {
         msgType = 'danger';
         title = 'Llamado de Atención';
-        text = 'Has validado la actividad fuera de plazo. Te exhortamos con mucho cariño a organizarte mejor y lograr las metas a tiempo.';
+        text = `Validaste ${selectedCells.length} actividades, pero algunas estaban fuera de plazo. Te exhortamos a lograr las metas a tiempo.`;
       }
 
       setModalData({ isOpen: true, type: msgType, title, message: text });
+      
+      // Clear selection and close prompt
+      setSelectedCells([]);
+      setShowBulkPrompt(false);
+      setBulkEmail('');
     } catch (err) {
       console.error(err);
-      showToast('Error al subir evidencia. Revisa los permisos de Firebase Storage.', 'error');
+      showToast('Error al procesar la aprobación masiva.', 'error');
+    } finally {
+      setIsBulkApproving(false);
     }
   };
 
@@ -118,7 +149,6 @@ export default function Dashboard() {
 
   const handleConfirmCerrarMes = async () => {
     try {
-      // Calculate next month string
       const [yearStr, monthStr] = selectedPeriod.split('-');
       let year = parseInt(yearStr, 10);
       let month = parseInt(monthStr, 10);
@@ -130,8 +160,6 @@ export default function Dashboard() {
       }
       
       const nextMonthStr = `${year}-${String(month).padStart(2, '0')}`;
-      
-      // Initialize the next month in Firebase
       await initializePeriod(nextMonthStr);
       
       setShowClosingSummary(false);
@@ -167,9 +195,10 @@ export default function Dashboard() {
             deadlines={getDeadlinesForArea(key)}
             userProfile={userProfile}
             isAdmin={isAdmin}
+            selectedCells={selectedCells}
+            onSelectSede={handleSelectSede}
             onToggleSede={(actId, sede) => handleToggleSede(key, actId, sede)}
             onSetDeadline={(actId, deadline) => handleSetDeadline(key, actId, deadline)}
-            onUploadEvidence={(actId, sede, file) => handleUploadEvidence(key, actId, sede, file)}
           />
         </div>,
       );
@@ -241,6 +270,48 @@ export default function Dashboard() {
         selectedPeriod={selectedPeriod}
         onConfirmClose={handleConfirmCerrarMes}
       />
+
+      {/* Floating Action Bar */}
+      {selectedCells.length > 0 && !showBulkPrompt && (
+        <div className="floating-action-bar">
+          <div className="floating-action-content">
+            <span className="floating-action-count">{selectedCells.length}</span>
+            <span>actividades seleccionadas</span>
+          </div>
+          <div className="floating-action-buttons">
+            <button className="btn-cancel" onClick={() => setSelectedCells([])}>Cancelar</button>
+            <button className="btn-confirm bulk-approve-btn" onClick={() => setShowBulkPrompt(true)}>Aprobar Selección</button>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Prompt Modal */}
+      {showBulkPrompt && (
+        <div className="sede-cell-modal-overlay" onClick={() => setShowBulkPrompt(false)}>
+          <div className="sede-cell-modal" onClick={e => e.stopPropagation()}>
+            <h3>Aprobar {selectedCells.length} Actividades</h3>
+            <p>Ingresa el correo al que informaste (o confirmación) para validar estas actividades:</p>
+            <input
+              type="text"
+              placeholder="Ej: micorreo@upeu.edu.pe"
+              value={bulkEmail}
+              onChange={e => setBulkEmail(e.target.value)}
+              autoFocus
+              disabled={isBulkApproving}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleBulkApprove();
+                if (e.key === 'Escape') setShowBulkPrompt(false);
+              }}
+            />
+            <div className="sede-cell-modal-actions">
+              <button className="btn-cancel" onClick={() => setShowBulkPrompt(false)} disabled={isBulkApproving}>Cancelar</button>
+              <button className="btn-confirm" onClick={handleBulkApprove} disabled={!bulkEmail.trim() || isBulkApproving}>
+                {isBulkApproving ? 'Validando...' : 'Validar Todo'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

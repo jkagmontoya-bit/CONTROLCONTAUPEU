@@ -290,3 +290,16 @@
     transform: translateX(-50%) translateY(0);
   }
 }
+
+.sede-cell.selected {
+  border: 2px solid #00d4ff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+  background: rgba(0, 212, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.sede-cell-checkmark {
+  color: #00d4ff;
+  font-size: 14px;
+  font-weight: bold;
+}
