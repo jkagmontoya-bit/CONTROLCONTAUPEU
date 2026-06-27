@@ -18,6 +18,7 @@ export default function MessageModal({ isOpen, onClose, type, message, title }) 
         <div className="message-modal-signature">
           <p>Atte.</p>
           <p><strong>Contador General</strong></p>
+          <p><em>Tu Angel de la Guardia</em></p>
         </div>
         <button className="message-modal-btn" onClick={onClose}>
           Entendido

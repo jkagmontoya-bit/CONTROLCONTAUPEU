@@ -88,19 +88,19 @@ export default function Dashboard() {
       const deadline = activitiesData[areaKey]?.[actId]?.deadline;
       const completedAt = new Date();
       const delay = getDelayDays(deadline, completedAt);
-      
+
       let msgType = 'success';
       let title = '¡Meta Lograda!';
-      let text = '¡Excelente trabajo! Has subido la evidencia a tiempo. Sigue así.';
+      let text = '¡Excelente trabajo! Has validado la actividad a tiempo. Sigue así.';
       
       if (delay > 0 && delay <= 3) {
         msgType = 'warning';
-        title = 'Evidencia Subida';
-        text = 'La evidencia se subió con un ligero retraso. ¡Anímate a lograr la meta a tiempo el próximo mes!';
+        title = 'Actividad Validada';
+        text = 'La actividad se validó con un ligero retraso. ¡Anímate a lograr la meta a tiempo el próximo mes!';
       } else if (delay >= 4) {
         msgType = 'danger';
         title = 'Llamado de Atención';
-        text = 'Has subido la evidencia fuera de plazo. Te exhortamos con mucho cariño a organizarte mejor y lograr las metas a tiempo.';
+        text = 'Has validado la actividad fuera de plazo. Te exhortamos con mucho cariño a organizarte mejor y lograr las metas a tiempo.';
       }
 
       setModalData({ isOpen: true, type: msgType, title, message: text });
