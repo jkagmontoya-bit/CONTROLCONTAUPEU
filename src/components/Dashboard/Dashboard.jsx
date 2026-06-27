@@ -192,7 +192,7 @@ export default function Dashboard() {
       <header className="dashboard-header">
         <div>
           <h1 className="dashboard-title">Panel de Control — Contabilidad General</h1>
-          <p className="dashboard-subtitle">Seguimiento de actividades por área y sede</p>
+          <p className="dashboard-subtitle">«Pero hágase todo decentemente y con orden.» — 1 Corintios 14:40</p>
         </div>
         <button className="btn-whatsapp" onClick={handleShareWhatsApp}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
