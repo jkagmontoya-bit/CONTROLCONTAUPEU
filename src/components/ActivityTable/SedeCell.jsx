@@ -15,10 +15,11 @@ export default function SedeCell({
   activityName = '',
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const fileRef = useRef(null);
 
   const handleClick = () => {
-    if (!canEdit) return;
+    if (!canEdit || isUploading) return;
     if (completed) {
       if (evidenceUrl) {
         window.open(evidenceUrl, '_blank');
@@ -34,14 +35,20 @@ export default function SedeCell({
 
   const handleUploadClick = (e) => {
     e.stopPropagation();
+    if (isUploading) return;
     fileRef.current?.click();
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      onUploadEvidence?.(file);
-      e.target.value = '';
+      setIsUploading(true);
+      try {
+        await onUploadEvidence?.(file);
+      } finally {
+        setIsUploading(false);
+        e.target.value = '';
+      }
     }
   };
 
@@ -83,6 +90,7 @@ export default function SedeCell({
     canEdit && 'editable',
     canEdit && !completed && 'pending-action',
     !canEdit && !completed && 'disabled',
+    isUploading && 'uploading',
   ].filter(Boolean).join(' ');
 
   return (
@@ -93,13 +101,15 @@ export default function SedeCell({
       onMouseLeave={() => setShowTooltip(false)}
       title=""
     >
-      {completed ? (
+      {isUploading ? (
+        <div className="sede-cell-spinner" />
+      ) : completed ? (
         <span className="sede-cell-date">{formatDateShort(completedAt)}</span>
       ) : (
         <div className="sede-cell-checkbox" />
       )}
 
-      {!completed && canEdit && (
+      {!completed && canEdit && !isUploading && (
         <button
           className="sede-cell-upload"
           onClick={handleUploadClick}
