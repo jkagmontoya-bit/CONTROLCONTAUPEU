@@ -1,0 +1,306 @@
+/* MonthClosingSummary.css */
+
+.closing-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 10, 20, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.closing-modal-content {
+  background: #1e1e2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: slideUpFade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.closing-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 10;
+}
+
+.closing-modal-close:hover {
+  color: #fff;
+}
+
+.closing-printable-area {
+  padding: 40px;
+}
+
+.closing-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.closing-header h2 {
+  font-size: 28px;
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.closing-period {
+  display: inline-block;
+  background: rgba(79, 140, 255, 0.2);
+  color: #4f8cff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.closing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.closing-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.closing-card.summary {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.1), rgba(0, 212, 255, 0.1));
+}
+
+.closing-card h3 {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: 100%;
+}
+
+.closing-big-stat {
+  margin-bottom: 24px;
+}
+
+.closing-big-value {
+  display: block;
+  font-size: 64px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(79, 140, 255, 0.4);
+}
+
+.closing-big-label {
+  font-size: 14px;
+  color: #4f8cff;
+  font-weight: 600;
+}
+
+.closing-stats-row {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  width: 100%;
+}
+
+.closing-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.closing-stat .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.closing-stat .dot.success { background: #25D366; box-shadow: 0 0 8px #25D366; }
+.closing-stat .dot.warning { background: #FFC107; box-shadow: 0 0 8px #FFC107; }
+.closing-stat .dot.danger { background: #F44336; box-shadow: 0 0 8px #F44336; }
+
+.closing-stat strong {
+  font-size: 20px;
+}
+
+.closing-area-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.closing-area-item:last-child {
+  margin-bottom: 0;
+}
+
+.closing-area-icon {
+  font-size: 32px;
+}
+
+.closing-area-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.closing-area-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.closing-area-pct {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.closing-ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.closing-ranking-header {
+  display: flex;
+  padding: 0 12px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.closing-ranking-header span:first-child { flex: 1; }
+.closing-ranking-header span:nth-child(2) { width: 80px; text-align: center; }
+.closing-ranking-header span:last-child { width: 60px; text-align: center; }
+
+.closing-ranking-row {
+  display: flex;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.closing-ranking-pos { flex: 1; font-weight: 600; }
+.closing-ranking-ontime { width: 80px; text-align: center; font-weight: 700; }
+.closing-ranking-ontime.success { color: #25D366; }
+.closing-ranking-total { width: 60px; text-align: center; color: rgba(255, 255, 255, 0.5); }
+
+.closing-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 24px 40px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.closing-actions button {
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-wa {
+  background: rgba(37, 211, 102, 0.15);
+  color: #25D366;
+}
+.btn-wa:hover {
+  background: rgba(37, 211, 102, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4f8cff, #00d4ff);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(79, 140, 255, 0.4);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.6);
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* --- Print Styles --- */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .closing-printable-area, .closing-printable-area * {
+    visibility: visible;
+  }
+  .closing-printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    color: #000;
+  }
+  .closing-modal-content {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+  }
+  .closing-card {
+    border: 1px solid #ccc;
+    background: transparent;
+  }
+  .closing-big-value { color: #000; text-shadow: none; }
+  .closing-header h2 { color: #000; }
+  .closing-period { color: #000; background: transparent; border: 1px solid #000; }
+  .closing-stat, .closing-ranking-row, .closing-area-name { color: #000; }
+  .closing-area-item { border: 1px solid #eee; background: transparent; }
+  .closing-ranking-row { border-bottom: 1px solid #eee; }
+}

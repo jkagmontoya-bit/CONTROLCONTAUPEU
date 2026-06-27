@@ -4,6 +4,7 @@ import AreaCard from './AreaCard';
 import OverallProgress from './OverallProgress';
 import ActivityTable from '../ActivityTable/ActivityTable';
 import KPIPanel from './KPIPanel';
+import MonthClosingSummary from './MonthClosingSummary';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../common/Toast';
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const { activitiesData, selectedPeriod, toggleSede, setDeadline, initializePeriod } = useData();
   const [expandedArea, setExpandedArea] = useState(null);
   const [modalData, setModalData] = useState({ isOpen: false, type: '', title: '', message: '' });
+  const [showClosingSummary, setShowClosingSummary] = useState(false);
 
   const handleToggle = (areaKey) => {
     setExpandedArea((prev) => (prev === areaKey ? null : areaKey));
@@ -110,7 +112,11 @@ export default function Dashboard() {
     }
   };
 
-  const handleCerrarMes = async () => {
+  const handleCerrarMes = () => {
+    setShowClosingSummary(true);
+  };
+
+  const handleConfirmCerrarMes = async () => {
     try {
       // Calculate next month string
       const [yearStr, monthStr] = selectedPeriod.split('-');
@@ -128,10 +134,9 @@ export default function Dashboard() {
       // Initialize the next month in Firebase
       await initializePeriod(nextMonthStr);
       
+      setShowClosingSummary(false);
       showToast(`¡Mes cerrado exitosamente! Ahora puedes trabajar en ${nextMonthStr}. Selecciona el mes en el menú para cambiar.`, 'success');
       
-      // Note: We don't forcibly change the context's selectedPeriod here to avoid interrupting the user if they want to review,
-      // but they can change it via the dropdown in the layout which will update it.
     } catch (err) {
       console.error(err);
       showToast('Error al cerrar mes', 'error');
@@ -227,6 +232,14 @@ export default function Dashboard() {
         title={modalData.title}
         message={modalData.message}
         onClose={() => setModalData({ ...modalData, isOpen: false })}
+      />
+
+      <MonthClosingSummary
+        isOpen={showClosingSummary}
+        onClose={() => setShowClosingSummary(false)}
+        activitiesData={activitiesData}
+        selectedPeriod={selectedPeriod}
+        onConfirmClose={handleConfirmCerrarMes}
       />
     </div>
   );
