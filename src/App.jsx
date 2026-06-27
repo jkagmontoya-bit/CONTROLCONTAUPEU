@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
-import { DataProvider } from './context/DataContext';
+import { DataProvider, useData } from './context/DataContext';
 import ToastProvider from './components/common/Toast';
 import LoginScreen from './components/Auth/LoginScreen';
 import RegisterSede from './components/Auth/RegisterSede';
@@ -16,9 +16,10 @@ import './App.css';
  * - Otherwise → render children
  */
 function ProtectedRoute() {
-  const { user, userProfile, loading } = useContext(AuthContext);
+  const { user, userProfile, loading: authLoading } = useContext(AuthContext);
+  const { selectedPeriod, setSelectedPeriod } = useData();
 
-  if (loading) {
+  if (authLoading) {
     return (
       <div className="app-loading">
         <div className="app-loading__spinner" />
@@ -35,9 +36,35 @@ function ProtectedRoute() {
     return <Navigate to="/register" replace />;
   }
 
+  const handlePeriodChange = (e) => {
+    if (e.target.value) {
+      setSelectedPeriod(e.target.value);
+    }
+  };
+
+  const periodSelector = (
+    <div className="period-selector-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.1)', padding: '4px 12px', borderRadius: '20px' }}>
+      <span style={{ fontSize: '14px', color: '#fff' }}>Mes:</span>
+      <input 
+        type="month" 
+        value={selectedPeriod} 
+        onChange={handlePeriodChange}
+        style={{
+          background: 'transparent',
+          border: 'none',
+          color: '#fff',
+          fontFamily: 'inherit',
+          fontSize: '14px',
+          outline: 'none',
+          cursor: 'pointer'
+        }}
+      />
+    </div>
+  );
+
   return (
     <div className="app">
-      <Header />
+      <Header periodSelector={periodSelector} />
       <main className="app__main">
         <Outlet />
       </main>
