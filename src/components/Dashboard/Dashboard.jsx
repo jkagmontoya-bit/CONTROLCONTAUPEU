@@ -3,9 +3,12 @@ import { SEDES, AREAS, AREA_IDS } from '../../data/activitiesData';
 import AreaCard from './AreaCard';
 import OverallProgress from './OverallProgress';
 import ActivityTable from '../ActivityTable/ActivityTable';
+import KPIPanel from './KPIPanel';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../common/Toast';
+import MessageModal from '../common/MessageModal';
+import { getDelayDays } from '../../utils/dateUtils';
 import './Dashboard.css';
 
 function calcAreaPct(areaActivities, activitiesDataArea, areaKey) {
@@ -24,8 +27,9 @@ function calcAreaPct(areaActivities, activitiesDataArea, areaKey) {
 
 export default function Dashboard() {
   const { userProfile, isAdmin } = useAuth();
-  const { activitiesData, selectedPeriod, toggleSede, setDeadline, uploadEvidenceFile } = useData();
+  const { activitiesData, selectedPeriod, toggleSede, setDeadline, initializePeriod } = useData();
   const [expandedArea, setExpandedArea] = useState(null);
+  const [modalData, setModalData] = useState({ isOpen: false, type: '', title: '', message: '' });
 
   const handleToggle = (areaKey) => {
     setExpandedArea((prev) => (prev === areaKey ? null : areaKey));
@@ -60,6 +64,7 @@ export default function Dashboard() {
   }, [activitiesData]);
 
   const handleToggleSede = (areaKey, actId, sede) => {
+    // Only used for unchecking if no file provided (if needed)
     toggleSede(selectedPeriod, areaKey, actId, sede);
   };
 
@@ -79,10 +84,57 @@ export default function Dashboard() {
   const handleUploadEvidence = async (areaKey, actId, sede, file) => {
     try {
       await toggleSede(selectedPeriod, areaKey, actId, sede, file);
-      showToast('Evidencia subida correctamente', 'success');
+      
+      const deadline = activitiesData[areaKey]?.[actId]?.deadline;
+      const completedAt = new Date();
+      const delay = getDelayDays(deadline, completedAt);
+      
+      let msgType = 'success';
+      let title = '¡Meta Lograda!';
+      let text = '¡Excelente trabajo! Has subido la evidencia a tiempo. Sigue así.';
+      
+      if (delay > 0 && delay <= 3) {
+        msgType = 'warning';
+        title = 'Evidencia Subida';
+        text = 'La evidencia se subió con un ligero retraso. ¡Anímate a lograr la meta a tiempo el próximo mes!';
+      } else if (delay >= 4) {
+        msgType = 'danger';
+        title = 'Llamado de Atención';
+        text = 'Has subido la evidencia fuera de plazo. Te exhortamos con mucho cariño a organizarte mejor y lograr las metas a tiempo.';
+      }
+
+      setModalData({ isOpen: true, type: msgType, title, message: text });
     } catch (err) {
       console.error(err);
       showToast('Error al subir evidencia. Revisa los permisos de Firebase Storage.', 'error');
+    }
+  };
+
+  const handleCerrarMes = async () => {
+    try {
+      // Calculate next month string
+      const [yearStr, monthStr] = selectedPeriod.split('-');
+      let year = parseInt(yearStr, 10);
+      let month = parseInt(monthStr, 10);
+      
+      month++;
+      if (month > 12) {
+        month = 1;
+        year++;
+      }
+      
+      const nextMonthStr = `${year}-${String(month).padStart(2, '0')}`;
+      
+      // Initialize the next month in Firebase
+      await initializePeriod(nextMonthStr);
+      
+      showToast(`¡Mes cerrado exitosamente! Ahora puedes trabajar en ${nextMonthStr}. Selecciona el mes en el menú para cambiar.`, 'success');
+      
+      // Note: We don't forcibly change the context's selectedPeriod here to avoid interrupting the user if they want to review,
+      // but they can change it via the dropdown in the layout which will update it.
+    } catch (err) {
+      console.error(err);
+      showToast('Error al cerrar mes', 'error');
     }
   };
 
@@ -145,17 +197,38 @@ export default function Dashboard() {
         </button>
       </header>
 
-      <div className="dashboard-cards-grid">
-        {gridItems}
+      <div className="dashboard-layout">
+        <div className="dashboard-main">
+          <div className="dashboard-cards-grid">
+            {gridItems}
+          </div>
+
+          <div className="dashboard-overall">
+            <OverallProgress
+              ventasPct={percentages.ventas}
+              comprasPct={percentages.compras}
+              conciliacionesPct={percentages.conciliaciones}
+            />
+          </div>
+        </div>
+
+        <aside className="dashboard-sidebar">
+          <KPIPanel 
+            activitiesData={activitiesData} 
+            percentages={percentages} 
+            onCerrarMes={handleCerrarMes} 
+          />
+        </aside>
       </div>
 
-      <div className="dashboard-overall">
-        <OverallProgress
-          ventasPct={percentages.ventas}
-          comprasPct={percentages.compras}
-          conciliacionesPct={percentages.conciliaciones}
-        />
-      </div>
+      <MessageModal 
+        isOpen={modalData.isOpen}
+        type={modalData.type}
+        title={modalData.title}
+        message={modalData.message}
+        onClose={() => setModalData({ ...modalData, isOpen: false })}
+      />
     </div>
   );
 }
+

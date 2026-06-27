@@ -62,12 +62,30 @@
   font-weight: 400;
 }
 
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.dashboard-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-sidebar {
+  position: sticky;
+  top: 24px;
+}
+
 .dashboard-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 /* ── Expanded area with table ── */
@@ -82,8 +100,7 @@
 }
 
 .dashboard-overall {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 @keyframes dashboardSlideDown {

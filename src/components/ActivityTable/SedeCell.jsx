@@ -19,11 +19,17 @@ export default function SedeCell({
 
   const handleClick = () => {
     if (!canEdit) return;
-    if (completed && evidenceUrl) {
-      window.open(evidenceUrl, '_blank');
+    if (completed) {
+      if (evidenceUrl) {
+        window.open(evidenceUrl, '_blank');
+      } else {
+        // Allow unchecking if somehow completed without evidence
+        onToggle?.();
+      }
       return;
     }
-    onToggle?.();
+    // If not completed, force file upload
+    fileRef.current?.click();
   };
 
   const handleUploadClick = (e) => {

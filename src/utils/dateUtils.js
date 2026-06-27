@@ -208,3 +208,26 @@ export function toInputDate(date) {
 
   return `${year}-${month}-${day}`;
 }
+
+/**
+ * Get the number of days delayed. Negative means early, 0 means on time, positive means late.
+ * @param {Date|Timestamp|string|null} deadline 
+ * @param {Date|Timestamp|string|null} completedAt 
+ * @returns {number}
+ */
+export function getDelayDays(deadline, completedAt) {
+  if (!deadline || !completedAt) return 0;
+  
+  const d = toDate(deadline);
+  const c = toDate(completedAt);
+  
+  if (!d || !c) return 0;
+  
+  // Normalize to local midnight to avoid timezone shift issues
+  const dDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const cDay = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+  
+  const diffTime = cDay.getTime() - dDay.getTime();
+  return Math.round(diffTime / (1000 * 60 * 60 * 24));
+}
+
